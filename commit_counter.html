@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>عداد الالتزام</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      direction: rtl;
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 24px;
+    }
+    .card {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 15px;
+      max-width: 380px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+      color: white;
+    }
+    .unit {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 14px 12px;
+      margin-bottom: 14px;
+    }
+    .label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .label .icon {
+      font-size: 20px;
+    }
+    .bar {
+      width: 100%;
+      height: 22px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    .year-fill { background-color: #6D4C41; }
+    .month-fill { background-color: #524e4e; }
+    .day-fill   { background-color: #66BB6A; }
+    .hour-fill  { background-color: #42A5F5; }
+    .minute-fill{ background-color: #EF5350; }
+    .second-fill{ background-color: #FDD835; }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <h2>عداد التزامك بالعادات</h2>
+  <div class="card">
+    <div class="unit" id="yearUnit" style="display: none;">
+      <div class="label">
+        <span><i class="fas fa-hourglass-start icon"></i> <span id="yearsLabel">0 سنة</span></span>
+      </div>
+      <div class="bar"><div class="fill year-fill" id="yearBar"></div></div>
+    </div>
+    <div class="unit">
+      <div class="label">
+        <span><i class="fas fa-calendar icon"></i> <span id="monthsLabel">0 شهر</span></span>
+      </div>
+      <div class="bar"><div class="fill month-fill" id="monthBar"></div></div>
+    </div>
+    <div class="unit">
+      <div class="label">
+        <span><i class="fas fa-calendar-day icon"></i> <span id="daysLabel">0 يوم</span></span>
+      </div>
+      <div class="bar"><div class="fill day-fill" id="dayBar"></div></div>
+    </div>
+    <div class="unit">
+      <div class="label">
+        <span><i class="fas fa-clock icon"></i> <span id="hoursLabel">0 ساعة</span></span>
+      </div>
+      <div class="bar"><div class="fill hour-fill" id="hourBar"></div></div>
+    </div>
+    <div class="unit">
+      <div class="label">
+        <span><i class="fas fa-stopwatch icon"></i> <span id="minutesLabel">0 دقيقة</span></span>
+      </div>
+      <div class="bar"><div class="fill minute-fill" id="minuteBar"></div></div>
+    </div>
+    <div class="unit">
+      <div class="label">
+        <span><i class="fas fa-hourglass-half icon"></i> <span id="secondsLabel">0 ثانية</span></span>
+      </div>
+      <div class="bar"><div class="fill second-fill" id="secondBar"></div></div>
+    </div>
+  </div>
+  <script>
+    const start = new Date("2025-02-29T00:00:00").getTime();
+    function updateCounter() {
+      const now = new Date().getTime();
+      let diff = now - start;
+      const msInMonth = 30 * 24 * 60 * 60 * 1000;
+      let totalMonths = Math.floor(diff / msInMonth);
+      const years = Math.floor(totalMonths / 12);
+      const months = totalMonths % 12;
+      diff %= msInMonth;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const dayPercent = (days / 30) * 100;
+      diff %= (1000 * 60 * 60 * 24);
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const hourPercent = (hours / 24) * 100;
+      diff %= (1000 * 60 * 60);
+      const minutes = Math.floor(diff / (1000 * 60));
+      const minutePercent = (minutes / 60) * 100;
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      const secondPercent = (seconds / 60) * 100;
+      document.getElementById("monthsLabel").innerText = months + " شهر";
+      document.getElementById("monthBar").style.width = (months / 12) * 100 + "%";
+      document.getElementById("daysLabel").innerText = days + " يوم";
+      document.getElementById("dayBar").style.width = dayPercent + "%";
+      document.getElementById("hoursLabel").innerText = hours + " ساعة";
+      document.getElementById("hourBar").style.width = hourPercent + "%";
+      document.getElementById("minutesLabel").innerText = minutes + " دقيقة";
+      document.getElementById("minuteBar").style.width = minutePercent + "%";
+      document.getElementById("secondsLabel").innerText = seconds + " ثانية";
+      document.getElementById("secondBar").style.width = secondPercent + "%";
+      if (years > 0) {
+        document.getElementById("yearUnit").style.display = "block";
+        document.getElementById("yearsLabel").innerText = years + " سنة";
+        document.getElementById("yearBar").style.width = (years / 10) * 100 + "%";
+      }
+    }
+    setInterval(updateCounter, 1000);
+    updateCounter();
+  </script>
+</body>
+</html>
